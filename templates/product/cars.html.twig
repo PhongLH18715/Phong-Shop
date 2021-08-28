@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <!-- Home -->
+    <a class="navbar-brand" href="{{ asset('/') }}">Home</a> <!-- asset() là hàm lấy url của trang -->
+
+    <ul class="navbar-nav">
+        <!-- Xếp theo nhà sản xuất -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Manufacturer</a>
+            <div class="dropdown-menu">
+                <!-- Dùng hàm for để lấy ra tất cả element trong manufacturers (thể loại xe) -->
+                {% for manufacturer in manufacturers %}
+                    <a class="dropdown-item" href="{{ asset('manufacturer/' ~ manufacturer.id ~ '') }}">{{ manufacturer.name }}</a>
+                    <!-- ~ là nối chuỗi (để ra dạng manufacturer/abc), phải thêm ~ '' ở sau để không bị lỗi (bug của Twig) -->
+                {% endfor %}
+            </div>
+        </li>
+        <!-- Xếp theo loại xe -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Car Type</a>
+            <div class="dropdown-menu">
+                {% for type in types %}
+                    <a class="dropdown-item" href="{{ asset('type/' ~ type.id ~ '') }}">{{ type.name }}</a>
+                    <!-- Tương tự ở trên -->
+                {% endfor %}
+            </div>
+        </li>
+        <!-- Trang quản lý -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Manager</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ asset('manager/car') }}">Car</a>
+                <a class="dropdown-item" href="{{ asset('manager/type') }}">Type</a>
+                <a class="dropdown-item" href="{{ asset('manager/manufacturer') }}">Manufacturer</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+<br>
+<div class="d-flex justify-content-center container mt-5">
+    {% for car in cars %}
+    <div class="card p-3 bg-white" style="width: 300px; margin: 0 20px;">
+        <div class="about-product text-center mt-2"><img src="{{ asset('uploads/images/' ~ car.Image ~ '') }}" style="width: 100%; height: 150px;">
+            <div>
+                <h4>{{ car.Name }}</h4>
+                <h6 class="mt-0 text-black-50">{% if (car.Manufacturer != null) %}{{ car.Manufacturer.Name }}{% endif %}</h6>
+            </div>
+        </div>
+        <div class="stats mt-2">
+            <div class="d-flex justify-content-between p-price"><span>Manufacturer</span><span>{% if (car.Manufacturer != null) %}{{ car.Manufacturer.Name }}{% endif %}</span></div>
+            {# có if để đề phòng Manufacturer hoặc CarType bị null (do admin xóa Manufacturer hoặc CarType mà chưa xóa hoặc set lại Car) #}
+            <div class="d-flex justify-content-between p-price"><span>Car Type</span><span>{% if (car.CarType != null) %}{{ car.CarType.Name }}{% endif %}</span></div>
+            {# date('Y') để chỉ lấy năm (Year) trong ngày tháng #}
+            <div class="d-flex justify-content-between p-price"><span>Year</span><span>{{ car.YearOfManufacture | date('Y') }}</span></div>
+        </div>
+        <div class="d-flex justify-content-between total font-weight-bold mt-4"><span>Price</span><span>{{ car.Price }} USD</span></div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

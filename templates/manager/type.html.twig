@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Car Type Manager{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <!-- Home -->
+    <a class="navbar-brand" href="{{ asset('/') }}">Home</a>
+    <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Manager</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ asset('manager/car') }}">Car</a>
+                <a class="dropdown-item" href="{{ asset('manager/type') }}">Type</a>
+                <a class="dropdown-item" href="{{ asset('manager/manufacturer') }}">Manufacturer</a>
+            </div>
+        </li>
+
+        {# <li class="nav-item">
+            <a class="nav-link" href="{{ asset('manager/car/create') }}">Create</a>
+        </li> #}
+    </ul>
+</nav>
+<br>
+<div class="container">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th colspan="2">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for type in types %}
+                <tr>
+                    <td>{{ type.id }}</td>
+                    <td>{{ type.Name }}</td>
+                    {# |nl2br để replace các ký tự xuống dòng (\n) thành <br> #}
+                    <td>{{ type.Description|nl2br }}</td>
+                    <td><a href="{{ asset('manager/type/update/' ~ type.id ~ '') }}" class="btn btn-warning" role="button">Edit</a></td>
+                    <td><a href="{{ asset('manager/type/delete/' ~ type.id ~ '') }}" class="btn btn-danger" role="button" onclick="return confirm('Are you sure to delete?')">Delete</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ asset('manager/type/create') }}" class="btn btn-info" role="button">Add</a>
+</div>
+{% endblock %}
